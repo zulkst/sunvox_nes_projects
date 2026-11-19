@@ -2,7 +2,7 @@
 =============================================================================
 NES RICOH 2A03 vs. SUNVOX MODULAR SYNTHESIS — SPECTRAL & ACOUSTIC ANALYSIS
 DSP Measurement & Verification Script
-Author: rdxcrack
+Author: Zulqarnain
 =============================================================================
 """
 
