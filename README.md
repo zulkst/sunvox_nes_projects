@@ -39,15 +39,22 @@ This discrete 32-step staircase injects high-order quantization harmonics into t
 Before the mixed audio leaves the console's RCA or RF jack, it passes through two passive RC filter stages on the NES motherboard:
 
 1. **DC Blocking High-Pass Filter (HPF):**
+
 $$
 f_c = \frac{1}{2\pi R_1 C_1} \approx 37 \text{ Hz}
 $$
+
+
 Blocks DC bias while gently rolling off sub-rumble below 37 Hz.
 
-2. **RF / Parasitic Low-Pass Filter (LPF):**
+3. **RF / Parasitic Low-Pass Filter (LPF):**
+
+
 $$
 f_c = \frac{1}{2\pi R_2 C_2} \approx 14 \text{ kHz}
 $$
+
+
 Rounds off ultra-high square wave harmonics, creating the warm analog tone characteristic of authentic hardware.
 
 ---
@@ -107,10 +114,17 @@ A Fast Fourier Transform (FFT, $N = 65,536$) was calculated across the climax of
 The iconic "growl" and bite of Konami basslines cannot be produced by a standard continuous triangle wave oscillator:
 
 * **Continuous Mathematical Triangle Wave:**
+
+  $$x(t) = \frac{8}{\pi^2} \sum_{k=0}^{\infty} \frac{(-1)^k}{(2k+1)^2} \sin\big((2k+1)\omega t\big)$$
+
+
+  Harmonics decay extremely quickly at
+
   $$
-  x(t) = \frac{8}{\pi^2} \sum_{k=0}^{\infty} \frac{(-1)^k}{(2k+1)^2} \sin\big((2k+1)\omega t\big)
+  1/n^2$ ($-12\text{ dB/octave})
   $$
-  Harmonics decay extremely quickly at $1/n^2$ ($-12\text{ dB/octave}$), leaving almost zero energy above $1\text{ kHz}$.
+
+  ,leaving almost zero energy above $$1\text{ kHz}$$.
 * **Hardware 2A03 32-Step Staircase DAC:**
   The Triangle channel cycles through discrete 4-bit voltage states ($15 \to 0 \to 15$).
 * **Acoustic Result:** Each sharp discrete step acts as a micro-transient impulse. In the frequency domain, this creates a dense cluster of stepping quantization harmonics between $3\text{ kHz}$ and $8\text{ kHz}$ ($-38\text{ dBFS}$ to $-45\text{ dBFS}$). In SunVox, routing the triangle through a 16-level stepped transfer function perfectly restores this aggressive hardware punch.
@@ -118,13 +132,25 @@ The iconic "growl" and bite of Konami basslines cannot be produced by a standard
 ---
 
 ### Panel C: Non-Linear Summing & Passive Saturation
-In standard modern DAWs, summing multiple voices is strictly linear ($S = A + B$). On real hardware, voices share common resistive junctions on Pin 1 (Pulse 1 & 2) and Pin 2 (Triangle, Noise, DPCM):
+In standard modern DAWs, summing multiple voices is strictly linear $$S = A + B$$. On real hardware, voices share common resistive junctions on Pin 1 (Pulse 1 & 2) and Pin 2 (Triangle, Noise, DPCM):
 
 * **The Compression Phenomenon:**
-  When Pulse 1 and Pulse 2 are both active at maximum volume ($p_1 = 15, p_2 = 15$), the output voltage does **not** equal $2.0 \times V_{\text{max}}$. Instead, the pull-down resistor network causes the curve to flatten hyperbolically:
+  When Pulse 1 and Pulse 2 are both active at maximum volume
+  $$
+  p_1 = 15, p_2 = 15
+  $$
+  , the output voltage does **not** equal
+
+  $$
+  2.0 \times V_{\text{max}}
+  $$
+
+   Instead, the pull-down resistor network causes the curve to flatten hyperbolically:
+  
   $$
   V_{\text{pulse}} = \frac{95.88}{\frac{8128}{p_1 + p_2} + 100}
   $$
+  
 * **My SunVox Implementation:**
   By mapping this hyperbolic transfer curve into a SunVox WaveShaper module, I achieved passive analog saturation and dynamic ducking. When the lead melody, syncopated bass, and snare hit simultaneously, the overall mix stays within $-2.98\text{ dBFS}$ with **zero digital clipping events**.
 
