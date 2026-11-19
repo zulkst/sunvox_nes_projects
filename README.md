@@ -84,7 +84,7 @@ The combined signal passes through two dedicated SunVox Filter modules configure
 
 To empirically prove that my SunVox modular patch accurately mirrors physical 2A03 silicon rather than sterile digital synthesis, I performed a multi-domain acoustic analysis on the rendered audio of *Contra: Alien's Lair (Stage 8)*.
 
-![Contra Alien's Lair Spectral Analysis](contra_aliens_lair_spectral_analysis.png)
+<img src="Analysis/Contra/contra_aliens_lair_spectral analysis.png" alt="Contra Spectral Analysis" width="100%">
 
 ---
 
